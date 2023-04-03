@@ -17,6 +17,13 @@ import java.util.UUID;
 public class CustomerController {
     private final CustomerService customerService;
 
+    @PutMapping("{customerId}")
+    public ResponseEntity handlePut(@PathVariable UUID customerId, @RequestBody Customer customer) {
+        customerService.updateCustomerById(customerId, customer);
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+
     @PostMapping
     public ResponseEntity handlePost(@RequestBody Customer customer) {
 
@@ -33,7 +40,7 @@ public class CustomerController {
         return customerService.listCustomers();
     }
 
-    @RequestMapping(value = "/{customerId}", method = RequestMethod.GET)
+    @RequestMapping(value = "{customerId}", method = RequestMethod.GET)
     public Customer getBeerById(@PathVariable("customerId") UUID customerId) {
         return customerService.getCustomerByID(customerId);
     }

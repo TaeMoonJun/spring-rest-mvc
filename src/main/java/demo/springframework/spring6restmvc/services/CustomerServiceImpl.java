@@ -59,7 +59,6 @@ public class CustomerServiceImpl implements CustomerService{
     public Customer saveNewCustomer(Customer customer) {
         Customer savedCustomer =  Customer.builder()
                 .id(UUID.randomUUID())
-                .version(customer.getVersion())
                 .customerName(customer.getCustomerName())
                 .createdDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now())
@@ -68,5 +67,13 @@ public class CustomerServiceImpl implements CustomerService{
         customerMap.put(savedCustomer.getId(), savedCustomer);
 
         return savedCustomer;
+    }
+
+    @Override
+    public void updateCustomerById(UUID customerId, Customer customer) {
+        Customer existing = customerMap.get(customerId);
+        existing.setCustomerName(customer.getCustomerName());
+
+        customerMap.put(existing.getId(), existing);
     }
 }
