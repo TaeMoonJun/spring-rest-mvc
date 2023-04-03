@@ -1,4 +1,4 @@
-package java.springframework.spring6restmvc;
+package demo.springframework.spring6restmvc;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
