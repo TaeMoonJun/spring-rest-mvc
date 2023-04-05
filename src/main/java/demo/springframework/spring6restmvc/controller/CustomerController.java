@@ -44,18 +44,18 @@ public class CustomerController {
         Customer savedCustomer = customerService.saveNewCustomer(customer);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/api/v1/beer/" + savedCustomer.getId().toString());
+        headers.add("Location", "/api/v1/customer/" + savedCustomer.getId().toString());
 
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<Customer> listBeers() {
+    public List<Customer> listCustomers() {
         return customerService.listCustomers();
     }
 
     @RequestMapping(value = "{customerId}", method = RequestMethod.GET)
-    public Customer getBeerById(@PathVariable("customerId") UUID customerId) {
+    public Customer getCustomerById(@PathVariable("customerId") UUID customerId) {
         return customerService.getCustomerByID(customerId);
     }
 }
