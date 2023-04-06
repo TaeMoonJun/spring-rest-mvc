@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CustomerServiceImpl implements CustomerService{
@@ -52,8 +49,8 @@ public class CustomerServiceImpl implements CustomerService{
     }
 
     @Override
-    public Customer getCustomerByID(UUID id) {
-        return customerMap.get(id);
+    public Optional<Customer> getCustomerByID(UUID id) {
+        return Optional.of(customerMap.get(id));
     }
 
     @Override
