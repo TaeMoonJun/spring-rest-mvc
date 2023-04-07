@@ -2,12 +2,12 @@ package demo.springframework.spring6restmvc.services;
 
 import demo.springframework.spring6restmvc.model.CustomerDTO;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface CustomerService {
-    ArrayList<CustomerDTO> listCustomers();
+    List<CustomerDTO> listCustomers();
 
     Optional<CustomerDTO> getCustomerByID(UUID id);
 
