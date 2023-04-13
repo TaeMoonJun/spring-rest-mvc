@@ -1,5 +1,6 @@
 package demo.springframework.spring6restmvc.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -13,6 +14,18 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class CustomErrorController {
 
+    @ExceptionHandler(Exception.class)
+    ResponseEntity handleException(Exception e){
+        // logging
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    ResponseEntity handleNotFoundException(NotFoundException e){
+        // logging
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity handleBindErrors(MethodArgumentNotValidException exception) {
 
@@ -23,6 +36,6 @@ public class CustomErrorController {
                     return errorMap;
                 }).collect(Collectors.toList());
 
-        return ResponseEntity.badRequest().body(errorList);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorList);
     }
 }
