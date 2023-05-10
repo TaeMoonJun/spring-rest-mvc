@@ -6,6 +6,7 @@ import demo.springframework.spring6restmvc.mappers.BeerMapper;
 import demo.springframework.spring6restmvc.model.BeerDTO;
 import demo.springframework.spring6restmvc.model.BeerStyle;
 import demo.springframework.spring6restmvc.repositories.BeerRepository;
+import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,7 +156,7 @@ class BeerControllerIntegrationTest {
 
     @Test
     void listBeers() {
-        List<BeerDTO> dtoList = beerController.listBeers(null, null);
+        List<BeerDTO> dtoList = beerController.listBeers(null, null, false);
 
         assertThat(dtoList.size()).isGreaterThan(0);
     }
@@ -165,7 +166,7 @@ class BeerControllerIntegrationTest {
     @Test
     void emptyListBeers() {
         beerRepository.deleteAll();
-        List<BeerDTO> dtoList = beerController.listBeers(null, null);
+        List<BeerDTO> dtoList = beerController.listBeers(null, null, false);
 
         assertThat(dtoList.size()).isEqualTo(0);
     }
@@ -184,5 +185,27 @@ class BeerControllerIntegrationTest {
                         .queryParam("beerStyle", BeerStyle.IPA.name()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(548)));
+    }
+
+    @Test
+    void listBeersByStyleAndNameShowInventoryTrue() throws Exception {
+        mockMvc.perform(get(BeerController.BEER_PATH)
+                        .queryParam("beerName", "IPA")
+                        .queryParam("beerStyle", BeerStyle.IPA.name())
+                        .queryParam("showInventory", "True"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(310)))
+                .andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.notNullValue()));
+    }
+
+    @Test
+    void listBeersByStyleAndNameShowInventoryFalse() throws Exception {
+        mockMvc.perform(get(BeerController.BEER_PATH)
+                        .queryParam("beerName", "IPA")
+                        .queryParam("beerStyle", BeerStyle.IPA.name())
+                        .queryParam("showInventory", "False"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(310)))
+                .andExpect(jsonPath("$.[0].quantityOnHand").value(IsNull.nullValue()));
     }
 }
