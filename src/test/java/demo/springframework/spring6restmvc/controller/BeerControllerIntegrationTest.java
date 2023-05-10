@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import demo.springframework.spring6restmvc.entities.Beer;
 import demo.springframework.spring6restmvc.mappers.BeerMapper;
 import demo.springframework.spring6restmvc.model.BeerDTO;
+import demo.springframework.spring6restmvc.model.BeerStyle;
 import demo.springframework.spring6restmvc.repositories.BeerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -154,7 +155,7 @@ class BeerControllerIntegrationTest {
 
     @Test
     void listBeers() {
-        List<BeerDTO> dtoList = beerController.listBeers(null);
+        List<BeerDTO> dtoList = beerController.listBeers(null, null);
 
         assertThat(dtoList.size()).isGreaterThan(0);
     }
@@ -164,7 +165,7 @@ class BeerControllerIntegrationTest {
     @Test
     void emptyListBeers() {
         beerRepository.deleteAll();
-        List<BeerDTO> dtoList = beerController.listBeers(null);
+        List<BeerDTO> dtoList = beerController.listBeers(null, null);
 
         assertThat(dtoList.size()).isEqualTo(0);
     }
@@ -175,5 +176,13 @@ class BeerControllerIntegrationTest {
                         .queryParam("beerName", "IPA"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(336)));
+    }
+
+    @Test
+    void testListBeersByBeerStyle() throws Exception {
+        mockMvc.perform(get(BeerController.BEER_PATH)
+                        .queryParam("beerStyle", BeerStyle.IPA.name()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(548)));
     }
 }
