@@ -1,10 +1,6 @@
 package demo.springframework.spring6restmvc.entities;
 
-import demo.springframework.spring6restmvc.model.BeerStyle;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -12,10 +8,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 @Builder
@@ -24,7 +17,7 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Beer {
+public class BeerOrderLine {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -33,33 +26,28 @@ public class Beer {
     @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     private UUID id;
 
+
+
     @Version
-    private Integer version;
-
-    @NotNull
-    @NotBlank
-    @Size(max = 50)     // for element
-    @Column(length = 50)    // for persistent data
-    private String beerName;
-
-    @NotNull
-    private BeerStyle beerStyle;
-
-    @NotNull
-    @NotBlank
-    private String upc;
-
-    private Integer quantityOnHand;
-
-    @NotNull
-    private BigDecimal price;
+    private Long version;
 
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdDate;
 
     @UpdateTimestamp
-    private LocalDateTime updateDate;
+    private LocalDateTime lastModifiedDate;
 
-    @OneToMany(mappedBy = "beer")
-    private Set<BeerOrderLine> beerOrderLines;
+    public boolean isNew(){
+        return this.id == null;
+    }
+
+    private Integer orderQuantity = 0;
+    private Integer quantityAllocated = 0;
+
+    @ManyToOne
+    private BeerOrder beerOrder;
+
+    @ManyToOne
+    private Beer beer;
 }

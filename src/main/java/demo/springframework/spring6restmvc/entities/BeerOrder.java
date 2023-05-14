@@ -12,8 +12,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -24,7 +22,7 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Beer {
+public class BeerOrder {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -34,32 +32,25 @@ public class Beer {
     private UUID id;
 
     @Version
-    private Integer version;
-
-    @NotNull
-    @NotBlank
-    @Size(max = 50)     // for element
-    @Column(length = 50)    // for persistent data
-    private String beerName;
-
-    @NotNull
-    private BeerStyle beerStyle;
-
-    @NotNull
-    @NotBlank
-    private String upc;
-
-    private Integer quantityOnHand;
-
-    @NotNull
-    private BigDecimal price;
+    private Long version;
 
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdDate;
 
     @UpdateTimestamp
-    private LocalDateTime updateDate;
+    private LocalDateTime lastModifiedDate;
 
-    @OneToMany(mappedBy = "beer")
+    public boolean isNew(){
+        return this.id == null;
+    }
+
+    private String customerRef;
+
+    @ManyToOne
+    private Customer customer;
+
+    @OneToMany(mappedBy = "beerOrder")
     private Set<BeerOrderLine> beerOrderLines;
+
 }
