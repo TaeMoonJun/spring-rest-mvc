@@ -40,7 +40,10 @@ public class BeerOrderLine {
         return this.id == null;
     }
 
+    @Builder.Default
     private Integer orderQuantity = 0;
+
+    @Builder.Default
     private Integer quantityAllocated = 0;
 
     @ManyToOne
